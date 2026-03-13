@@ -11,6 +11,10 @@
                    class="text-sm font-semibold text-blue-600 hover:text-blue-800 transition">Home</a>
                 <a href="{{ route('index.materia') }}" 
                    class="text-sm font-semibold text-blue-600 hover:text-blue-800 transition">Materias</a>
+                <a href="{{ route('index.horario') }}" 
+                   class="text-sm font-semibold text-blue-600 hover:text-blue-800 transition">Horarios</a>
+                <a href="{{ route('index.grupo') }}" 
+                   class="text-sm font-semibold text-blue-600 hover:text-blue-800 transition">Grupos</a>
             </div>
         </div>
         <form action="{{ route('logout') }}" method="POST">
