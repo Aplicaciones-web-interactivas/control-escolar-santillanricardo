@@ -7,6 +7,7 @@ use App\Models\Materia;
 use App\Models\Horario;
 use App\Models\Grupo;
 use App\Models\User;
+use App\Models\Calificacion;
 
 class AdminController extends Controller
 {
@@ -72,8 +73,8 @@ class AdminController extends Controller
         $materias = Materia::all();
         $usuarios = User::all();
         return view('admin.horarios')->with('horarios', $horarios)
-                                     ->with('materias', $materias)
-                                     ->with('usuarios', $usuarios);
+            ->with('materias', $materias)
+            ->with('usuarios', $usuarios);
     }
 
     public function saveHorario(Request $request)
@@ -106,8 +107,8 @@ class AdminController extends Controller
         $usuarios      = User::all();
         if ($horarioEditar != null) {
             return view('admin.modificarhorario')->with('horario', $horarioEditar)
-                                                 ->with('materias', $materias)
-                                                 ->with('usuarios', $usuarios);
+                ->with('materias', $materias)
+                ->with('usuarios', $usuarios);
         } else {
             return redirect()->back()->withErrors(['error' => 'Horario no encontrado']);
         }
@@ -135,7 +136,7 @@ class AdminController extends Controller
         $grupos   = Grupo::all();
         $horarios = Horario::all();
         return view('admin.grupos')->with('grupos', $grupos)
-                                   ->with('horarios', $horarios);
+            ->with('horarios', $horarios);
     }
 
     public function saveGrupo(Request $request)
@@ -164,7 +165,7 @@ class AdminController extends Controller
         $horarios    = Horario::all();
         if ($grupoEditar != null) {
             return view('admin.modificargrupo')->with('grupo', $grupoEditar)
-                                               ->with('horarios', $horarios);
+                ->with('horarios', $horarios);
         } else {
             return redirect()->back()->withErrors(['error' => 'Grupo no encontrado']);
         }
@@ -181,5 +182,65 @@ class AdminController extends Controller
             return redirect()->back()->withErrors(['error' => 'Grupo no encontrado']);
         }
         return redirect('/grupos');
+    }
+
+    // ─── CALIFICACIONES ─────────────────────────────────────
+    public function calificaciones()
+    {
+        $calificaciones = Calificacion::all();
+        $grupos         = Grupo::all();
+        $usuarios       = User::all();
+        return view('admin.calificaciones')->with('calificaciones', $calificaciones)
+            ->with('grupos', $grupos)
+            ->with('usuarios', $usuarios);
+    }
+
+    public function saveCalificacion(Request $request)
+    {
+        $nuevaCalificacion = new Calificacion();
+        $nuevaCalificacion->grupo_id      = $request->grupo_id;
+        $nuevaCalificacion->user_id       = $request->user_id;
+        $nuevaCalificacion->calificacion  = $request->calificacion;
+        $nuevaCalificacion->save();
+        return redirect()->back();
+    }
+
+    public function deleteCalificacion($id)
+    {
+        $calificacionEliminar = Calificacion::find($id);
+        if ($calificacionEliminar != null) {
+            $calificacionEliminar->delete();
+        } else {
+            return redirect()->back()->withErrors(['error' => 'Calificación no encontrada']);
+        }
+        return redirect()->back();
+    }
+
+    public function editCalificacion($id)
+    {
+        $calificacionEditar = Calificacion::find($id);
+        $grupos             = Grupo::all();
+        $usuarios           = User::all();
+        if ($calificacionEditar != null) {
+            return view('admin.modificarcalificacion')->with('calificacion', $calificacionEditar)
+                ->with('grupos', $grupos)
+                ->with('usuarios', $usuarios);
+        } else {
+            return redirect()->back()->withErrors(['error' => 'Calificación no encontrada']);
+        }
+    }
+
+    public function updateCalificacion(Request $request, $id)
+    {
+        $calificacionActualizar = Calificacion::find($id);
+        if ($calificacionActualizar != null) {
+            $calificacionActualizar->grupo_id     = $request->grupo_id;
+            $calificacionActualizar->user_id      = $request->user_id;
+            $calificacionActualizar->calificacion = $request->calificacion;
+            $calificacionActualizar->save();
+        } else {
+            return redirect()->back()->withErrors(['error' => 'Calificación no encontrada']);
+        }
+        return redirect('/calificaciones');
     }
 }

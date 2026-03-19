@@ -47,4 +47,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/grupos/{id}/edit', [AdminController::class, 'editGrupo'])->name('grupos.edit');
     Route::put('/grupos/{id}', [AdminController::class, 'updateGrupo'])->name('update.grupo');
     Route::delete('/grupos/{id}', [AdminController::class, 'deleteGrupo'])->name('eliminar.grupo');
+
+    // Calificaciones
+    Route::get('/calificaciones', [AdminController::class, 'calificaciones'])->name('index.calificacion');
+    Route::post('/calificaciones', [AdminController::class, 'saveCalificacion'])->name('save.calificacion');
+    Route::get('/calificaciones/{id}/edit', [AdminController::class, 'editCalificacion'])->name('calificaciones.edit');
+    Route::put('/calificaciones/{id}', [AdminController::class, 'updateCalificacion'])->name('update.calificacion');
+    Route::delete('/calificaciones/{id}', [AdminController::class, 'deleteCalificacion'])->name('eliminar.calificacion');
 });
