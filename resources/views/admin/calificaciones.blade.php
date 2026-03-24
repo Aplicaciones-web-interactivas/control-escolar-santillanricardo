@@ -59,7 +59,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($calificaciones as $calificacion)
+                        @forelse ($calificaciones as $calificacion)
                             <tr class="border-b hover:bg-blue-50">
                                 <td class="px-4 py-2">{{ $calificacion->user->nombre }}</td>
                                 <td class="px-4 py-2">{{ $calificacion->grupo->nombre }}</td>
@@ -72,15 +72,22 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
+                                            onclick="return confirm('¿Estás seguro de eliminar esta calificación?')"
                                             class="text-red-500 hover:text-red-700 font-medium">Eliminar</button>
                                     </form>
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="4" class="px-4 py-4 text-center text-gray-400">No hay registros.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
+                <div class="mt-4">
+                    {{ $calificaciones->links() }}
+                </div>
             </div>
-
         </div>
     </div>
 @endsection

@@ -8,6 +8,7 @@ use App\Models\Horario;
 use App\Models\Grupo;
 use App\Models\User;
 use App\Models\Calificacion;
+use App\Models\Inscripcion;
 
 class AdminController extends Controller
 {
@@ -19,7 +20,7 @@ class AdminController extends Controller
     // ─── MATERIAS ───────────────────────────────────────
     public function materias()
     {
-        $materias = Materia::all();
+        $materias = Materia::paginate(10);
         return view('admin.materias')->with('materias', $materias);
     }
 
@@ -29,7 +30,7 @@ class AdminController extends Controller
         $nuevaMateria->nombre = $request->nombre;
         $nuevaMateria->clave = $request->clave;
         $nuevaMateria->save();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Materia guardada correctamente.');
     }
 
     public function deleteMateria($id)
@@ -40,7 +41,7 @@ class AdminController extends Controller
         } else {
             return redirect()->back()->withErrors(['error' => 'Materia no encontrada']);
         }
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Materia eliminada correctamente.');
     }
 
     public function editMateria($id)
@@ -63,13 +64,13 @@ class AdminController extends Controller
         } else {
             return redirect()->back()->withErrors(['error' => 'Materia no encontrada']);
         }
-        return redirect('/materias');
+        return redirect('/materias')->with('success', 'Materia actualizada correctamente.');
     }
 
     // ─── HORARIOS ───────────────────────────────────────
     public function horarios()
     {
-        $horarios = Horario::all();
+        $horarios = Horario::paginate(10);
         $materias = Materia::all();
         $usuarios = User::all();
         return view('admin.horarios')->with('horarios', $horarios)
@@ -86,7 +87,7 @@ class AdminController extends Controller
         $nuevoHorario->hora_inicio = $request->hora_inicio;
         $nuevoHorario->hora_fin    = $request->hora_fin;
         $nuevoHorario->save();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Horario guardado correctamente.');
     }
 
     public function deleteHorario($id)
@@ -97,7 +98,7 @@ class AdminController extends Controller
         } else {
             return redirect()->back()->withErrors(['error' => 'Horario no encontrado']);
         }
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Horario eliminado correctamente.');
     }
 
     public function editHorario($id)
@@ -106,7 +107,7 @@ class AdminController extends Controller
         $materias      = Materia::all();
         $usuarios      = User::all();
         if ($horarioEditar != null) {
-            return view('admin.modificarhorario')->with('horario', $horarioEditar)
+            return view('admin.modificarHorario')->with('horario', $horarioEditar)
                 ->with('materias', $materias)
                 ->with('usuarios', $usuarios);
         } else {
@@ -127,13 +128,13 @@ class AdminController extends Controller
         } else {
             return redirect()->back()->withErrors(['error' => 'Horario no encontrado']);
         }
-        return redirect('/horarios');
+        return redirect('/horarios')->with('success', 'Horario actualizado correctamente.');
     }
 
     // ─── GRUPOS ─────────────────────────────────────────
     public function grupos()
     {
-        $grupos   = Grupo::all();
+        $grupos   = Grupo::paginate(10);
         $horarios = Horario::all();
         return view('admin.grupos')->with('grupos', $grupos)
             ->with('horarios', $horarios);
@@ -145,7 +146,7 @@ class AdminController extends Controller
         $nuevoGrupo->horario_id = $request->horario_id;
         $nuevoGrupo->nombre     = $request->nombre;
         $nuevoGrupo->save();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Grupo guardado correctamente.');
     }
 
     public function deleteGrupo($id)
@@ -156,7 +157,7 @@ class AdminController extends Controller
         } else {
             return redirect()->back()->withErrors(['error' => 'Grupo no encontrado']);
         }
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Grupo eliminado correctamente.');
     }
 
     public function editGrupo($id)
@@ -164,7 +165,7 @@ class AdminController extends Controller
         $grupoEditar = Grupo::find($id);
         $horarios    = Horario::all();
         if ($grupoEditar != null) {
-            return view('admin.modificargrupo')->with('grupo', $grupoEditar)
+            return view('admin.modificarGrupo')->with('grupo', $grupoEditar)
                 ->with('horarios', $horarios);
         } else {
             return redirect()->back()->withErrors(['error' => 'Grupo no encontrado']);
@@ -181,13 +182,13 @@ class AdminController extends Controller
         } else {
             return redirect()->back()->withErrors(['error' => 'Grupo no encontrado']);
         }
-        return redirect('/grupos');
+        return redirect('/grupos')->with('success', 'Grupo actualizado correctamente.');
     }
 
     // ─── CALIFICACIONES ─────────────────────────────────────
     public function calificaciones()
     {
-        $calificaciones = Calificacion::all();
+        $calificaciones = Calificacion::paginate(10);
         $grupos         = Grupo::all();
         $usuarios       = User::all();
         return view('admin.calificaciones')->with('calificaciones', $calificaciones)
@@ -202,7 +203,7 @@ class AdminController extends Controller
         $nuevaCalificacion->user_id       = $request->user_id;
         $nuevaCalificacion->calificacion  = $request->calificacion;
         $nuevaCalificacion->save();
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Calificación guardada correctamente.');
     }
 
     public function deleteCalificacion($id)
@@ -213,7 +214,7 @@ class AdminController extends Controller
         } else {
             return redirect()->back()->withErrors(['error' => 'Calificación no encontrada']);
         }
-        return redirect()->back();
+        return redirect()->back()->with('success', 'Calificación eliminada correctamente.');
     }
 
     public function editCalificacion($id)
@@ -241,6 +242,64 @@ class AdminController extends Controller
         } else {
             return redirect()->back()->withErrors(['error' => 'Calificación no encontrada']);
         }
-        return redirect('/calificaciones');
+        return redirect('/calificaciones')->with('success', 'Calificación actualizada correctamente.');
+    }
+
+    // ─── INSCRIPCIONES ──────────────────────────────────────
+    public function inscripciones()
+    {
+        $inscripciones = Inscripcion::paginate(10);
+        $usuarios      = User::all();
+        $grupos        = Grupo::all();
+        return view('admin.inscripciones')->with('inscripciones', $inscripciones)
+            ->with('usuarios', $usuarios)
+            ->with('grupos', $grupos);
+    }
+
+    public function saveInscripcion(Request $request)
+    {
+        $nuevaInscripcion = new Inscripcion();
+        $nuevaInscripcion->user_id   = $request->user_id;
+        $nuevaInscripcion->grupo_id  = $request->grupo_id;
+        $nuevaInscripcion->save();
+        return redirect()->back()->with('success', 'Inscripción guardada correctamente.');
+    }
+
+    public function deleteInscripcion($id)
+    {
+        $inscripcionEliminar = Inscripcion::find($id);
+        if ($inscripcionEliminar != null) {
+            $inscripcionEliminar->delete();
+        } else {
+            return redirect()->back()->withErrors(['error' => 'Inscripción no encontrada']);
+        }
+        return redirect()->back()->with('success', 'Inscripción eliminada correctamente.');
+    }
+
+    public function editInscripcion($id)
+    {
+        $inscripcionEditar = Inscripcion::find($id);
+        $usuarios          = User::all();
+        $grupos            = Grupo::all();
+        if ($inscripcionEditar != null) {
+            return view('admin.modificarinscripcion')->with('inscripcion', $inscripcionEditar)
+                ->with('usuarios', $usuarios)
+                ->with('grupos', $grupos);
+        } else {
+            return redirect()->back()->withErrors(['error' => 'Inscripción no encontrada']);
+        }
+    }
+
+    public function updateInscripcion(Request $request, $id)
+    {
+        $inscripcionActualizar = Inscripcion::find($id);
+        if ($inscripcionActualizar != null) {
+            $inscripcionActualizar->user_id  = $request->user_id;
+            $inscripcionActualizar->grupo_id = $request->grupo_id;
+            $inscripcionActualizar->save();
+        } else {
+            return redirect()->back()->withErrors(['error' => 'Inscripción no encontrada']);
+        }
+        return redirect('/inscripciones')->with('success', 'Inscripción actualizada correctamente.');
     }
 }

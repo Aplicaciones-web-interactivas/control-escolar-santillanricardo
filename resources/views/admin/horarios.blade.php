@@ -79,7 +79,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($horarios as $horario)
+                        @forelse ($horarios as $horario)
                             <tr class="border-b hover:bg-blue-50">
                                 <td class="px-4 py-2">{{ $horario->id }}</td>
                                 <td class="px-4 py-2">{{ $horario->materia->nombre }}</td>
@@ -95,15 +95,22 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
+                                            onclick="return confirm('¿Estás seguro de eliminar este horario?')"
                                             class="text-red-500 hover:text-red-700 font-medium">Eliminar</button>
                                     </form>
                                 </td>
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr>
+                                <td colspan="7" class="px-4 py-4 text-center text-gray-400">No hay registros.</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
+                <div class="mt-4">
+                    {{ $horarios->links() }}
+                </div>
             </div>
-
         </div>
     </div>
 @endsection

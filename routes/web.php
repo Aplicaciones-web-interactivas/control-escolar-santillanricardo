@@ -54,4 +54,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/calificaciones/{id}/edit', [AdminController::class, 'editCalificacion'])->name('calificaciones.edit');
     Route::put('/calificaciones/{id}', [AdminController::class, 'updateCalificacion'])->name('update.calificacion');
     Route::delete('/calificaciones/{id}', [AdminController::class, 'deleteCalificacion'])->name('eliminar.calificacion');
+
+    // Inscripciones
+    Route::get('/inscripciones', [AdminController::class, 'inscripciones'])->name('index.inscripcion');
+    Route::post('/inscripciones', [AdminController::class, 'saveInscripcion'])->name('save.inscripcion');
+    Route::get('/inscripciones/{id}/edit', [AdminController::class, 'editInscripcion'])->name('inscripciones.edit');
+    Route::put('/inscripciones/{id}', [AdminController::class, 'updateInscripcion'])->name('update.inscripcion');
+    Route::delete('/inscripciones/{id}', [AdminController::class, 'deleteInscripcion'])->name('eliminar.inscripcion');
 });

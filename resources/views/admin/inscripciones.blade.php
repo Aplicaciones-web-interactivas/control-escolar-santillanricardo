@@ -11,27 +11,30 @@
             @endif
 
             <div class="bg-white shadow rounded p-6 mb-6">
-                <h2 class="text-xl font-bold mb-4">Agregar Grupo</h2>
-                <form action="{{ route('save.grupo') }}" method="POST">
+                <h2 class="text-xl font-bold mb-4">Agregar Inscripción</h2>
+                <form action="{{ route('save.inscripcion') }}" method="POST">
                     @csrf
                     <div class="mb-4">
-                        <label class="block mb-1 text-sm font-medium text-gray-900">Horario</label>
-                        <select name="horario_id"
+                        <label class="block mb-1 text-sm font-medium text-gray-900">Usuario</label>
+                        <select name="user_id"
                             class="bg-gray-50 border border-blue-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
                             required>
-                            <option value="">Selecciona un horario</option>
-                            @foreach ($horarios as $horario)
-                                <option value="{{ $horario->id }}">
-                                    {{ $horario->materia_id }} - {{ $horario->dia }} {{ $horario->hora_inicio }}
-                                </option>
+                            <option value="">Selecciona un usuario</option>
+                            @foreach ($usuarios as $usuario)
+                                <option value="{{ $usuario->id }}">{{ $usuario->nombre }}</option>
                             @endforeach
                         </select>
                     </div>
                     <div class="mb-4">
-                        <label class="block mb-1 text-sm font-medium text-gray-900">Nombre del grupo</label>
-                        <input type="text" name="nombre"
+                        <label class="block mb-1 text-sm font-medium text-gray-900">Grupo</label>
+                        <select name="grupo_id"
                             class="bg-gray-50 border border-blue-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
-                            placeholder="Ej. Grupo A" required>
+                            required>
+                            <option value="">Selecciona un grupo</option>
+                            @foreach ($grupos as $grupo)
+                                <option value="{{ $grupo->id }}">{{ $grupo->nombre }}</option>
+                            @endforeach
+                        </select>
                     </div>
                     <button type="submit"
                         class="bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm px-5 py-2.5 rounded-lg">Guardar</button>
@@ -39,29 +42,29 @@
             </div>
 
             <div class="bg-white shadow rounded p-6">
-                <h2 class="text-xl font-bold mb-4">Lista de Grupos</h2>
+                <h2 class="text-xl font-bold mb-4">Lista de Inscripciones</h2>
                 <table class="w-full text-sm text-left text-gray-700">
                     <thead class="bg-blue-50">
                         <tr>
-                            <th class="px-4 py-2 text-blue-700">Nombre</th>
-                            <th class="px-4 py-2 text-blue-700">Horario</th>
+                            <th class="px-4 py-2 text-blue-700">Usuario</th>
+                            <th class="px-4 py-2 text-blue-700">Grupo</th>
                             <th class="px-4 py-2 text-blue-700">Acciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($grupos as $grupo)
+                        @forelse ($inscripciones as $inscripcion)
                             <tr class="border-b hover:bg-blue-50">
-                                <td class="px-4 py-2">{{ $grupo->nombre }}</td>
-                                <td class="px-4 py-2">{{ $grupo->horario_id }}</td>
+                                <td class="px-4 py-2">{{ $inscripcion->user->nombre }}</td>
+                                <td class="px-4 py-2">{{ $inscripcion->grupo->nombre }}</td>
                                 <td class="px-4 py-2 flex gap-4">
-                                    <a href="{{ route('grupos.edit', $grupo->id) }}"
+                                    <a href="{{ route('inscripciones.edit', $inscripcion->id) }}"
                                         class="text-blue-500 hover:text-blue-700 font-medium">Editar</a>
-                                    <form action="{{ route('eliminar.grupo', $grupo->id) }}" method="POST"
+                                    <form action="{{ route('eliminar.inscripcion', $inscripcion->id) }}" method="POST"
                                         style="display:inline;">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
-                                            onclick="return confirm('¿Estás seguro de eliminar este grupo?')"
+                                            onclick="return confirm('¿Estás seguro de eliminar esta inscripción?')"
                                             class="text-red-500 hover:text-red-700 font-medium">Eliminar</button>
                                     </form>
                                 </td>
@@ -74,7 +77,7 @@
                     </tbody>
                 </table>
                 <div class="mt-4">
-                    {{ $grupos->links() }}
+                    {{ $inscripciones->links() }}
                 </div>
             </div>
         </div>
