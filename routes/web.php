@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
+use App\Http\Controllers\MaestroController;
+use App\Http\Controllers\AlumnoController;
 
 Route::get('/', function () {
     return view('login');
@@ -61,4 +63,18 @@ Route::middleware('auth')->group(function () {
     Route::get('/inscripciones/{id}/edit', [AdminController::class, 'editInscripcion'])->name('inscripciones.edit');
     Route::put('/inscripciones/{id}', [AdminController::class, 'updateInscripcion'])->name('update.inscripcion');
     Route::delete('/inscripciones/{id}', [AdminController::class, 'deleteInscripcion'])->name('eliminar.inscripcion');
+
+    // Maestro
+    Route::get('/maestro/dashboard', [MaestroController::class, 'dashboard'])->name('maestro.dashboard');
+    Route::get('/maestro/tareas', [MaestroController::class, 'tareas'])->name('maestro.tareas');
+    Route::post('/maestro/tareas', [MaestroController::class, 'saveTarea'])->name('maestro.save.tarea');
+    Route::get('/maestro/tareas/{id}/edit', [MaestroController::class, 'editTarea'])->name('maestro.edit.tarea');
+    Route::put('/maestro/tareas/{id}', [MaestroController::class, 'updateTarea'])->name('maestro.update.tarea');
+    Route::delete('/maestro/tareas/{id}', [MaestroController::class, 'deleteTarea'])->name('maestro.delete.tarea');
+    Route::get('/maestro/tareas/{id}/entregas', [MaestroController::class, 'verEntregas'])->name('maestro.entregas');
+
+    // Alumno
+    Route::get('/alumno/dashboard', [AlumnoController::class, 'dashboard'])->name('alumno.dashboard');
+    Route::get('/alumno/tareas', [AlumnoController::class, 'tareas'])->name('alumno.tareas');
+    Route::post('/alumno/tareas/{id}/entregar', [AlumnoController::class, 'entregarTarea'])->name('alumno.entregar');
 });
